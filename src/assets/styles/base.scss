@@ -5,8 +5,8 @@
 }
 
 body {
-  background-color: $light;
-  color: $dark;
+  background-color: #fff;
+  color: #000;
   font-family: 'Inter', sans-serif;
 }
 
@@ -17,4 +17,23 @@ button, input, textarea {
 input, textarea {
   border: none;
   outline: none;
+}
+
+.container {
+  width: 100%;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-100%);
 }

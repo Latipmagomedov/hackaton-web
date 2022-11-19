@@ -7,11 +7,21 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   component: () => import('../views/About.vue')
-  // }
+  {
+    path: '/beside',
+    name: 'Beside',
+    component: () => import('../views/beside')
+  },
+  {
+    path: '/places',
+    name: 'Places',
+    component: () => import('../views/places')
+  },
+  {
+    path: '/like',
+    name: 'Like',
+    component: () => import('../views/like')
+  },
 ]
 
 const router = createRouter({
