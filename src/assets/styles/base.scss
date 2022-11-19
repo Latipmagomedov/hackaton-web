@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $light;
+  color: $dark;
+  font-family: 'Inter', sans-serif;
+}
+
+button, input, textarea {
+  font-family: 'Inter', sans-serif;
+}
+
+input, textarea {
+  border: none;
+  outline: none;
+}
