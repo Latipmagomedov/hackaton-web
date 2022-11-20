@@ -1,15 +1,26 @@
 <template>
-  <div class="bottom-curtain">
+  <div class="bottom-curtain" :class="{'bottom-curtain_open': isOpen}">
     <div class="bottom-curtain__wrapper container">
       <div class="bottom-curtain__header">
         <div class="bottom-curtain__header-title">Рядом</div>
-        <div class="bottom-curtain__header-line"></div>
+        <div class="bottom-curtain__header-line" @click="toggle"></div>
         <div class="bottom-curtain__header-btn" @click="$emit('close')">
           <img src="@/assets/images/icons/close.svg" alt="close">
         </div>
       </div>
+
+      <VInput class="bottom-curtain__search"
+              v-if="isOpen"
+              v-model="search"
+              placeholder="Поиск мест и адресов"
+              @focus="searchWindowShow = true">
+        <template #rightIcon>
+          <img src="@/assets/images/icons/search.svg" class="map-container__search-icon" alt="search">
+        </template>
+      </VInput>
     </div>
-    <div class="bottom-curtain__slider">
+
+    <div class="bottom-curtain__slider" :class="{'bottom-curtain__slider_open': isOpen}">
       <div class="bottom-curtain__slider-row">
         <div class="bottom-curtain__slide"
              v-for="address in addresses"
@@ -20,9 +31,19 @@
       </div>
     </div>
   </div>
+
+
+  <transition name="slide-fade">
+    <SearchWindow class="map-container__search-window"
+                  @close="searchWindowShow = false"
+                  v-if="searchWindowShow"/>
+  </transition>
 </template>
 
 <script setup>
+import {ref} from "vue";
+import SearchWindow from '@/components/SearchWindow'
+
 const addresses = [
   {
     id: 1,
@@ -49,7 +70,39 @@ const addresses = [
     icon: require('../../assets/images/icons/beside/atms.svg'),
     title: 'Банкоматы'
   },
+  {
+    id: 1,
+    icon: require('../../assets/images/icons/beside/food.svg'),
+    title: 'Где поесть'
+  },
+  {
+    id: 2,
+    icon: require('../../assets/images/icons/beside/hotel.svg'),
+    title: 'Гостиница'
+  },
+  {
+    id: 3,
+    icon: require('../../assets/images/icons/beside/shop.svg'),
+    title: 'Магазин'
+  },
+  {
+    id: 4,
+    icon: require('../../assets/images/icons/beside/parks.svg'),
+    title: 'Парки'
+  },
+  {
+    id: 5,
+    icon: require('../../assets/images/icons/beside/atms.svg'),
+    title: 'Банкоматы'
+  },
 ]
+
+const search = ref('')
+const isOpen = ref(false)
+const searchWindowShow = ref(false)
+const toggle = () => {
+  isOpen.value = !isOpen.value
+}
 </script>
 
 <style scoped lang="scss">
@@ -61,6 +114,13 @@ const addresses = [
   border-radius: 20px 20px 0 0;
   background-color: #fff;
   z-index: 100;
+  transition: .3s;
+
+  &_open {
+    height: 100vh;
+    overflow-x: auto;
+    padding-bottom: 20px;
+  }
 
   &__header {
     margin-top: 18px;
@@ -97,6 +157,10 @@ const addresses = [
     }
   }
 
+  &__search {
+    margin-top: 16px;
+  }
+
   &__slider {
     width: 100%;
     margin-top: 16px;
@@ -111,6 +175,11 @@ const addresses = [
 
   &__slider-row {
     display: flex;
+  }
+
+  &__slider_open &__slider-row {
+    width: 100%;
+    flex-direction: column;
   }
 
   &__slide {
@@ -128,6 +197,19 @@ const addresses = [
     }
   }
 
+  &__slider_open &__slide {
+    width: 100%;
+    padding: 0 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    &:not(:first-child) {
+      margin-left: 0;
+      margin-top: 8px;
+    }
+  }
+
   &__slide-icon {
     width: 40px;
     height: 40px;
@@ -138,6 +220,11 @@ const addresses = [
     text-align: center;
     font-size: 12px;
     font-weight: 400;
+  }
+
+  &__slider_open &__slide-title {
+    margin-left: 16px;
+    font-size: 14px;
   }
 }
 </style>

@@ -7,22 +7,33 @@
         </div>
         <VInput class="search-window__search-inp"
                 v-model="search"
+                @input="getDirections"
+                focus
                 placeholder="Поиск...">
           <template #rightIcon>
             <img src="@/assets/images/icons/search-grey.svg" class="search-window__search-icon" alt="search">
           </template>
         </VInput>
       </div>
-      <div class="search-window__clear">
-        <div class="search-window__clear-title">Недавние запросы</div>
-        <div class="search-window__clear-btn">
-          <img src="@/assets/images/icons/clear.svg" alt="clear">
-        </div>
-      </div>
+      <!--      <div class="search-window__clear">-->
+      <!--        <div class="search-window__clear-title">Недавние запросы</div>-->
+      <!--        <div class="search-window__clear-btn">-->
+      <!--          <img src="@/assets/images/icons/clear.svg" alt="clear">-->
+      <!--        </div>-->
+      <!--      </div>-->
 
-      <div class="search-window__list">
-        <div class="search-window__item" v-for="i in 18">
-          <div class="search-window__item-title">Джума-мечеть</div>
+      <!--      <div class="search-window__list">-->
+      <!--        <div class="search-window__item" v-for="i in 18">-->
+      <!--          <div class="search-window__item-title">Джума-мечеть</div>-->
+      <!--          <div class="search-window__item-btn">-->
+      <!--            <img src="@/assets/images/icons/clock.svg" alt="clock">-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div class="search-window__list search-window__list_active">
+        <div class="search-window__item" v-for="(result, index) in results" :key="index" @click="$emit('result', result)">
+          <div class="search-window__item-title">{{ result.text }} {{ result.address }}</div>
           <div class="search-window__item-btn">
             <img src="@/assets/images/icons/clock.svg" alt="clock">
           </div>
@@ -33,9 +44,23 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import directions from "@/api/directions";
 
 const search = ref('')
+const results = ref([])
+
+const getDirections = async () => {
+  try {
+    const response = await directions.getGeocoding(search.value, {
+      access_token: 'pk.eyJ1IjoibGF0aXBqcyIsImEiOiJjbGFtenMxeDQwa2wxM291cnQ5amI2MzdnIn0.Q0ZA4_hTGydrIv453cLoqA'
+    })
+
+    results.value = response.features
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -46,7 +71,7 @@ const search = ref('')
   width: 100%;
   height: 100%;
   background-color: #fff;
-  z-index: 100;
+  z-index: 101;
 
   &__header {
     margin-top: 16px;
@@ -112,6 +137,10 @@ const search = ref('')
     color: rgba(0, 0, 0, 0.32);
   }
 
+  &__list_active &__item-title {
+    color: #000;
+  }
+
   &__item-btn {
     width: 20px;
     height: 20px;
@@ -120,6 +149,10 @@ const search = ref('')
       width: 100%;
       height: 100%;
     }
+  }
+
+  &__list_active &__item-btn {
+    display: none;
   }
 }
 </style>

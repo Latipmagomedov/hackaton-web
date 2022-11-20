@@ -10,14 +10,19 @@
                       v-for="(location, index) in locations"
                       :key="index"
                       :image="location.image"
-                      :title="location.title"/>
+                      :title="location.title"
+                      @click="showDetailPlace = true"/>
       </div>
     </div>
+
+    <DetailPlace v-if="showDetailPlace" @close="showDetailPlace = false"/>
   </div>
 </template>
 
 <script setup>
+import {ref} from "vue";
 import LocationCard from '@/components/LocationCard'
+import DetailPlace from '@/components/DetailPlace'
 
 const locations = [
   {
@@ -37,7 +42,7 @@ const locations = [
     title: 'Село Гамсутль'
   },
   {
-    image: 'https://zoritabasarana.ru/media/k2/items/cache/f27c46af75c9b79e337ce9283b2cff99_XL.jpg',
+    image: 'https://news-r.ru/upload/iblock/983/9832013427c97f2dc0a164da8a547198.jpg',
     title: 'Центральная площадь'
   },
   {
@@ -65,6 +70,8 @@ const locations = [
     title: 'Бархан Сарыйкум'
   },
 ]
+
+const showDetailPlace = ref(false)
 </script>
 
 <style scoped lang="scss">

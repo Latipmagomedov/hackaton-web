@@ -8,11 +8,6 @@ const routes = [
     component: Home
   },
   {
-    path: '/beside',
-    name: 'Beside',
-    component: () => import('../views/beside')
-  },
-  {
     path: '/places',
     name: 'Places',
     component: () => import('../views/places')

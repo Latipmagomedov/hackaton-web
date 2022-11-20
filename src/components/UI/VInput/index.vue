@@ -4,6 +4,7 @@
            class="search-bar__inp"
            v-model="inputVal"
            :placeholder="placeholder"
+           ref="inp"
            @focus="$emit('focus')">
 
     <div class="search-bar__right-icon">
@@ -13,13 +14,14 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 const props = defineProps({
   modelValue: [String, Number],
   placeholder: {
     type: String,
   },
+  focus: Boolean
 })
 
 const emit = defineEmits(["update:modelValue", "focus"]);
@@ -28,6 +30,14 @@ const inputVal = computed({
   get: () => props.modelValue,
   set: (value) => emit("update:modelValue", value),
 });
+
+const inp = ref(null)
+
+onMounted(() => {
+  if(props.focus) {
+    inp.value.focus()
+  }
+})
 </script>
 
 <style scoped lang="scss">

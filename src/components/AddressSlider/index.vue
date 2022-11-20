@@ -1,23 +1,21 @@
 <template>
   <div class="address-slider">
     <div class="address-slider__slides">
-      <div class="address-slider__slide">
-        Село Гуниб <span class="address-slider__slide-blue">3 ч 21 мин</span>
-      </div>
-      <div class="address-slider__slide">
-        Veranda <span class="address-slider__slide-blue">30 мин</span>
-      </div>
-      <div class="address-slider__slide">
-        Село Гуниб <span class="address-slider__slide-blue">3 ч 21 мин</span>
-      </div>
-      <div class="address-slider__slide">
-        Село Гуниб <span class="address-slider__slide-blue">3 ч 21 мин</span>
+      <div class="address-slider__slide"
+           v-for="(address, index) in addresses"
+           :key="index"
+           @click="$emit('selectedRecommendedAddresses', address)">
+        {{ address.name }} <span class="address-slider__slide-blue" v-if="address.time">{{ address.time }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+defineProps({
+  addresses: Array
+})
+</script>
 
 <style scoped lang="scss">
 .address-slider {

@@ -14,10 +14,13 @@
     <transition name="slide-fade">
       <SearchWindow class="map-container__search-window"
                     @close="searchWindowShow = false"
+                    @result="searchReasult"
                     v-if="searchWindowShow"/>
     </transition>
     <div ref="mapContainer" class="map-container__map"></div>
-    <AddressSlider class="map-container__address-slider"/>
+    <AddressSlider class="map-container__address-slider"
+                   :addresses="recommendedAddresses"
+                   @selectedRecommendedAddresses="selectedRecommendedAddresses"/>
   </div>
 </template>
 
@@ -40,14 +43,47 @@ const directionsList = ref([])
 const search = ref('')
 const searchWindowShow = ref(false)
 
+const recommendedAddresses = [
+  {
+    name: 'Село Гуниб',
+    coordinates: [46.9646632, 42.3870221],
+    img: 'https://img.geliophoto.com/gunib/07_gunib.jpg',
+    time: '3 ч 21 мин'
+  },
+  {
+    name: 'Veranda',
+    coordinates: [47.5108414, 42.9793247],
+    img: 'https://avatars.mds.yandex.net/get-altay/1938975/2a00000176252ea29e9b75fb17286fd95c81/XXL',
+    time: '21 мин'
+  },
+  {
+    name: 'Gambit',
+    coordinates: [47.5197927, 42.9744487],
+    img: 'https://img.restaurantguru.com/rce8-Restoran-Gambit-Dostavka-24-chasa-exterior.jpg',
+    time: '21 мин'
+  },
+]
 
-const getDirections = async () => {
+const searchReasultCoordinates = ref([])
+const searchReasult = (res) => {
+  searchWindowShow.value = false
+  searchReasultCoordinates.value = res
+  getDirections(searchReasultCoordinates.value.geometry.coordinates, searchReasultCoordinates.value.text)
+
+  console.log(res)
+}
+
+const selectedRecommendedAddresses = (address) => {
+  getDirections(address.coordinates, address.name, address.img)
+}
+
+const getDirections = async (coordinates, text, img) => {
   const body = {
     coordinates: {
       from: userPosition.value,
       to: {
-        lon: '47.4957403',
-        lat: '42.9706087'
+        lon: coordinates[0],
+        lat: coordinates[1]
       }
     },
     query: {
@@ -73,6 +109,8 @@ const getDirections = async () => {
       }
     }
 
+
+    createMarkers(coordinates, text, img)
     map.value.addSource('route', data)
     map.value.addLayer({
       'id': 'route',
@@ -91,6 +129,44 @@ const getDirections = async () => {
     console.log(error)
   }
 }
+
+const createMarkers = (coordinates, text, img) => {
+  const el = document.createElement('div');
+  if (img) {
+    el.innerHTML =
+        `
+      <div class="custom-marker">
+         <img src="${img}"
+              class="custom-marker__img"
+              alt="marker">
+         <div class="custom-marker__name">${text}</div>
+         <img src="${require('../../assets/images/icons/triangle.svg')}"
+              class="custom-marker__triangle"
+              alt="triangle">
+      </div>
+      `
+  } else {
+    el.innerHTML =
+        `
+      <div class="custom-marker">
+         <div class="custom-marker__img"></div>
+         <div class="custom-marker__name">${text}</div>
+         <img src="${require('../../assets/images/icons/triangle.svg')}"
+              class="custom-marker__triangle"
+              alt="triangle">
+      </div>
+      `
+  }
+
+  el.className = 'marker';
+
+  const marker = new mapboxgl.Marker(el)
+      .setLngLat(coordinates)
+      .addTo(map.value);
+
+  // marker.remove();
+}
+
 const init = () => {
   map.value = new mapboxgl.Map({
     container: mapContainer.value,
@@ -116,27 +192,9 @@ const init = () => {
       lat: e.coords.latitude
     }
     console.log(userPosition.value);
-    getDirections()
+
   });
-  const el = document.createElement('div');
-  el.innerHTML =
-      `
-      <div class="custom-marker">
-         <img src="https://cachizer2.2gis.com/reviews-photos/25528228-eeae-40d3-9d71-e73d7ce822c6.jpg?w=1920"
-              class="custom-marker__img"
-              alt="marker">
-         <div class="custom-marker__name">Джума-мечеть</div>
-         <img src="${require('../../assets/images/icons/triangle.svg')}"
-              class="custom-marker__triangle"
-              alt="triangle">
-      </div>
-      `
 
-  el.className = 'marker';
-
-  const marker = new mapboxgl.Marker(el)
-      .setLngLat([47.4957403, 42.9706087])
-      .addTo(map.value);
 
   map.value.on('load', () => {
     location.trigger()
@@ -179,6 +237,7 @@ onMounted(() => init())
       height: 44px;
       border-radius: 10px;
       object-fit: cover;
+      background-color: #696969;
     }
 
     &__name {
