@@ -15,7 +15,7 @@
         </div>
         <div class="tab-bar__link-name">Карта</div>
       </router-link>
-      <router-link class="tab-bar__link" to="/beside">
+      <div class="tab-bar__link" @click="$emit('openBottomCurtain')">
         <div class="tab-bar__link-icon tab-bar__link-icon_beside">
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6.25 8.75H23.75" stroke="#BDBDBD" stroke-width="2" stroke-linecap="round"/>
@@ -24,7 +24,7 @@
           </svg>
         </div>
         <div class="tab-bar__link-name">Рядом</div>
-      </router-link>
+      </div>
       <router-link class="tab-bar__link" to="/places">
         <div class="tab-bar__link-icon tab-bar__link-icon_places">
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,12 +5,27 @@
         <component :is="Component"/>
       </keep-alive>
     </router-view>
-    <TabBar class="tab-bar"/>
+    <TabBar class="tab-bar" @openBottomCurtain="openBottomCurtain"/>
+    <transition name="slide-fade-down">
+      <BottomCurtain class="bottom-curtain" v-if="showBottomCurtain" @close="showBottomCurtain = false"/>
+    </transition>
   </div>
 </template>
 
 <script setup>
+import {ref} from "vue";
+import {useRouter} from "vue-router";
 import TabBar from '@/components/TabBar'
+import BottomCurtain from '@/components/BottomCurtain'
+
+const router = useRouter();
+
+const showBottomCurtain = ref(false)
+
+const openBottomCurtain = () => {
+  router.push('/')
+  showBottomCurtain.value = true
+}
 </script>
 
 <style lang="scss">
@@ -31,5 +46,9 @@ $maxWidth: 900px;
   transform: translateX(-50%);
   bottom: 0;
   z-index: 99;
+}
+
+.bottom-curtain {
+  max-width: $maxWidth;
 }
 </style>
