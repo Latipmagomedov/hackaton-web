@@ -5,8 +5,8 @@
     </div>
 
     <carousel :items-to-show="1" class="detail-place__slider">
-      <slide v-for="slide in 3" :key="slide">
-        <img src="@/assets/images/dzhuma.png" class="detail-place__slider-img" alt="location">
+      <slide v-for="slide in 1" :key="slide">
+        <img :src="location.image" class="detail-place__slider-img" alt="location">
       </slide>
 
       <template #addons>
@@ -15,13 +15,8 @@
     </carousel>
 
     <div class="detail-place__wrapper container">
-      <div class="detail-place__title">Джума мечеть</div>
-      <p class="detail-place__description">
-        Джума-мечеть или по-другому аль-Джами‘-мечеть – так называется главная и центральная соборная мечеть в городе,
-        где совершают коллективную молитву «джума-намаз» по пятницам в полдень, также носит название пятничной мечети и
-        обычно является в городе самой большой мечетью, внутри и в ее дворе могут собраться сотни, тысячи и даже десятки
-        тысяч человек.
-      </p>
+      <div class="detail-place__title">{{ location.title }}</div>
+      <p class="detail-place__description">{{location.description}}</p>
 
       <div class="detail-place__btns">
         <div class="detail-place__btn">
@@ -54,6 +49,9 @@
 import 'vue3-carousel/dist/carousel.css'
 import {Carousel, Slide, Pagination, Navigation} from 'vue3-carousel'
 
+defineProps({
+  location: Object
+})
 </script>
 
 <style scoped lang="scss">

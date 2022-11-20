@@ -165,6 +165,7 @@ const createMarkers = (coordinates, text, img) => {
       .addTo(map.value);
 
   // marker.remove();
+  console.log(marker[0])
 }
 
 const init = () => {
